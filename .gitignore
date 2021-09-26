@@ -1,3 +1,10 @@
+trimgalore/
+fastqc/
+star_salmon/
+salmon/
+work/
+figs/
+.nextflow*
 *DS_Store
 *.bed
 *.loom
