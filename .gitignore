@@ -1,3 +1,6 @@
+genes*
+reads/
+old_reads/
 trimgalore/
 fastqc/
 star_salmon/
