@@ -1,0 +1,13 @@
+bedtools	2.30.0
+dupradar	1.18.0
+fastqc	0.11.9
+hisat2	2.2.0
+nextflow	21.04.0
+nf-core/rnaseq	3.1
+picard	2.23.9
+qualimap	2.2.2-dev
+samtools	1.10
+stringtie	2.1.4
+subread	2.0.1
+trimgalore	0.6.6
+ucsc	377
