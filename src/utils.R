@@ -2,7 +2,7 @@ library(dplyr)
 library(tidyverse)
 library(DESeq2)
 library(tximport)
-library(biomaRt)
+#library(biomaRt)
 library(ggplot2)
 library(SummarizedExperiment)
 library(stringr)
@@ -29,8 +29,8 @@ time_getter = function(x){
 }
 
 genotype_getter = function(x){
-  if(str_detect(x[[1]], 'tph')){
-    return('tph1')
+  if(str_detect(x[[1]], 'pqm')){
+    return('pqm1')
   } else{
     return('wt')
   }
@@ -38,18 +38,18 @@ genotype_getter = function(x){
 
 # DESeq wrappers:
 loadDDS = function(rds, which, design, column='Genotype'){
-  ensembl=useMart("ensembl")
-  worm = useDataset("celegans_gene_ensembl",mart=ensembl)
-  wormProteinCoding = getBM(attributes=c("ensembl_gene_id", "external_gene_name",
-                                         "description"), filters='biotype',
-                            values=c('protein_coding'), mart=worm,
-                            useCache = FALSE)
-  common = names(rds)[names(rds) %in% wormProteinCoding$ensembl_gene_id]
+  # ensembl=useMart("ensembl")
+  # worm = useDataset("celegans_gene_ensembl",mart=ensembl)
+  # wormProteinCoding = getBM(attributes=c("ensembl_gene_id", "external_gene_name",
+  #                                        "description"), filters='biotype',
+  #                           values=c('protein_coding'), mart=worm,
+  #                           useCache = FALSE)
+  # common = names(rds)[names(rds) %in% wormProteinCoding$ensembl_gene_id]
   
   if(which != ''){
-    rds = rds[common, rds[[column]] == which]
+    rds = rds[, rds[[column]] == which]
   } else{
-    rds = rds[common,]
+    rds = rds[,]
   }
   assay = round(as.matrix(assay(rds)))
   se = SummarizedExperiment(list(raw=assay),
@@ -64,7 +64,7 @@ loadDDS = function(rds, which, design, column='Genotype'){
   dds$Treatment <- relevel(dds$Treatment, ref = "cnt")
   dds$Age <- relevel(dds$Age, ref = "50")
   
-  keep <- rowSums(counts(dds)) >= 20
+  keep <- (rowSums(counts(dds)) >= 100) & (rowMin(counts(dds)) >= 10)
   dds <- dds[keep,]
   dds = DESeq(dds)
   
@@ -73,7 +73,7 @@ loadDDS = function(rds, which, design, column='Genotype'){
 
 get_results = function(dds, factor, numerator, denominator,
                        name='', contrast=TRUE, filter=TRUE){
-  alpha = 0.01
+  alpha = 0.05
   if(contrast){
     res = results(dds, alpha=alpha, contrast = c(factor,
                                                  paste(numerator, sep=''),
