@@ -1,4 +1,3 @@
-import json
 import pandas as pd
 import numpy as np
 import scipy
@@ -8,8 +7,8 @@ import seaborn as sns
 from statsmodels.stats.multitest import fdrcorrection
 
 from matplotlib import rc
-rc('text', usetex=True)
-rc('text.latex', preamble=r'\usepackage{cmbright}')
+rc('text', usetex=False)
+# rc('text.latex', preamble=r'\usepackage{cmbright}')
 rc('font', **{'family': 'sans-serif', 'sans-serif': ['Helvetica']})
 
 rc = {'lines.linewidth': 2,
@@ -72,8 +71,7 @@ def fdr_correct(data, alpha=0.05, method='indep', col='pval'):
     data['fdr'] = fdr[1]
     data['neglogq'] = -data.fdr.apply(np.log10)
     data['sig'] = fdr[0]
-    data.neglogq = data.neglogq.replace(np.inf, 350)
-
+    data.neglogq = data.neglogq.replace(np.inf, np.nanmax(data.neglogq) + 1)
     return data
 
 def test_tissue_direction(sig, tissues, col='log2FoldChange58'):
@@ -123,6 +121,37 @@ def test_tissue_direction(sig, tissues, col='log2FoldChange58'):
     data = data.dropna()
     data['FracPosExpected'] = p_pos
     return data
+
+
+def similarity_trimming(considered_tissues, tissues, remove=[]):
+    """
+    Checks terms pairwise for similarity of annotations, and in the event that
+    the similarity is too great, adds the tissue with fewer annotations to a
+    list.
+
+    Params:
+    -------
+    considered_tissues:    list. Tissues to compare among.
+    tissues:    pd.DataFrame. Dataframe of terms and annotations
+    remove:     list. List of tissues to remove.
+
+    Output:
+    remove:     list. List of tissues that are highly similar and should be
+                      removed.
+    """
+    for i, t in enumerate(considered_tissues):
+        for t2 in considered_tissues[i + 1:]:
+            if t == t2:
+                continue
+            current = tissues.tissue.isin([t, t2])
+            counted = tissues[current].groupby('wbid').tissue.count()
+            both = (counted == 2).sum()
+            min_size = tissues[current].groupby('tissue').wbid.count().min()
+            min_tissue = tissues[current].groupby('tissue').wbid.count().idxmin()
+
+            if (both / min_size > 0.75) & (min_tissue!= 'pharynx'):
+                remove += [min_tissue]
+    return remove
 
 
 def pretty_GSEA_plots(binom_data, fc_data, alpha=0.05, x='neglogq', y='tissue',
@@ -177,3 +206,40 @@ def pretty_GSEA_plots(binom_data, fc_data, alpha=0.05, x='neglogq', y='tissue',
     legend.get_title().set_fontsize('14') #legend 'Title' fontsize
 
     return fig, ax, legend
+
+
+def corr_plots(data, x, y, hue, size, tissue, qval=0.05, sig_col='padj50',
+               kind='pearson', **kwargs):
+    """
+    A wrapper to plot scatter plots or rank scatter plots.
+
+    Params:
+    -------
+    data     pd.DataFrame. Data
+    x        str. Column containing x-coordinates
+    y        str. Column containing y-coordinates
+    hue      str. Column that specifies point color
+    size     str. Column that specifies point size.
+    tissue:  str. Tissue genes should be expressed in
+    qval     float. significance threshold
+    kind:    str. If `rank`, then plots a rank-plot
+    """
+    cond = (data.tissue.str.contains(tissue)) & (data[sig_col] < qval)
+    tmp = data[cond].copy()
+
+    if kind == 'rank':
+        tmp['rank-' + x] = tmp[x].rank()
+        tmp['rank-' + y] = tmp[y].rank()
+        x = 'rank-' + x
+        y = 'rank-' + y
+
+    sns.relplot(data=tmp, x=x, y=y, size=size, hue=hue, kind="scatter",
+                **kwargs)
+    plt.plot((tmp[x].min(), tmp[x].max()), (tmp[x].min(), tmp[x].max()),
+             color='black', lw=3)
+
+    if kind != 'rank':
+        plt.axvline(0, ls='--', lw=1, color='black')
+        plt.axhline(0, ls='--', lw=1, color='black')
+
+    plt.title(tissue)
