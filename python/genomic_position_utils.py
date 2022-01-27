@@ -149,7 +149,8 @@ def plot_corrs(corr, shuffled):
     return fig, ax
 
 
-def calculate_enrichment(selection=None, alpha=0.05, suppress=False, test='pqm1'):
+def calculate_enrichment(res, selection=None, alpha=0.05, suppress=False,
+                         test='pqm1'):
     if selection is None:
         selection = (res['padj-50'] < 0.05) & (res['padj-58'] < 0.05)
 

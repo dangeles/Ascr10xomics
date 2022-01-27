@@ -160,52 +160,17 @@ def pretty_GSEA_plots(binom_data, fc_data, alpha=0.05, x='neglogq',
     """
     GSEA Plots
     """
-
-    fig, ax = plt.subplots(figsize=(25, 12), ncols=3, sharey = True)
+    fig, ax = plt.subplots(figsize=(8, 8))
     # generate stripplots of q-values and fraction of positive log2FC
     sns.stripplot(x=x, y=y, data=binom_data, jitter=False,
                   size=size, hue=hue,
-                  palette=palette, ax=ax[0])
-
-    sns.stripplot(x='FracPos', y=y, data=binom_data, jitter=False,
-                  size=size, hue=hue,
-                  palette=palette, ax=ax[1])
-
-    # plot log2FC in the same order as the stripplots above:
-    tissue_order = pd.CategoricalDtype(categories=binom_data.tissue.unique(),
-                                       ordered=True)
-    tmp = fc_data[fc_data.tissue.isin(binom_data.tissue)].copy()
-    tmp.tissue = tmp.tissue.astype(tissue_order)
-    tmp.sort_values('tissue', inplace=True)
-
-    # plot points:
-    sns.stripplot(x='log2FoldChange', y='tissue', size=6, hue=hue, data=tmp,
-                  palette=palette, ax=ax[2], dodge=True)
+                  palette=palette, ax=ax)
 
     # significance threshold:
-    ax[0].axvline(-np.log10(alpha), ls='--', color='red',
-                  label='alpha threshold')
-    # set a horizontal line at 0 for the log2FC:
-    ax[2].axvline(0, ls='-', color='black')
+    ax.axvline(-np.log10(alpha), ls='--', color='red',
+               label='alpha threshold')
 
-    # add vertical lines at Mean Positive Fraction (null expectation)
-    if hue is not None:
-        for n, g in binom_data.groupby(hue):
-            ax[1].axvline(g.FracPosExpected.unique()[0],
-                  ls='--', label='Expected Positive Fraction for ' + n,
-                  color=palette[n])
-
-    # remove legends, labels, gray:
-    for ai in ax:
-        ai.set_ylabel('')
-        ai.legend([])
-        ai.yaxis.grid(color='gray', linewidth=.5)
-
-    # add one legend back in
-    legend = ax[1].legend(loc=(0.05, 0.05), fontsize=20)
-    legend.get_title().set_fontsize('14') #legend 'Title' fontsize
-
-    return fig, ax, legend
+    return fig, ax
 
 
 def corr_plots(data, x, y, hue, size, tissue, qval=0.05, sig_col='padj-50',
