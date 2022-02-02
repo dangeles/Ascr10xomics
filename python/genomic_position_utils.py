@@ -132,13 +132,17 @@ def plot_corrs(corr, shuffled):
         # plot points above 95%
         ax[x, y].scatter(g[sel].index, g[sel].pearson, color='red', s=90, zorder=np.inf)
         # color in the null interval:
-        ax[x, y].fill_between(g.index, rand5, rand95, color='gray', alpha=0.5)
+        ax[x, y].fill_between((0, 2 * 10 ** 7), rand5, rand95, color='gray', alpha=0.5)
         ax[x, y].set_title(n, fontsize=35)
         ax[x, y].annotate('No. Corr Peaks: {0}'.format(n_corr_peaks),
                           (1 * 10 ** 7, .8), fontsize=30)
         ax[x, y].tick_params(axis="x", labelsize=30)
         ax[x, y].tick_params(axis="y", labelsize=30)
         ax[x, y].yaxis.get_offset_text().set_fontsize(26)
+
+        for ai in ax:
+            for aij in ai:
+                aij.set_xlim(0, 2 * 10 ** 7)
 
         i += 1
 
