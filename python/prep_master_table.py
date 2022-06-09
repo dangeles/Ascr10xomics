@@ -42,8 +42,8 @@ time = {c: '50' if '50' in c else '58' for c in mat.columns}
 n50.columns = [c + '-50' for c in n50.columns]
 n58.columns = [c + '-58' for c in n58.columns]
 pqm1.columns = [c + '-pqm1' for c in pqm1.columns]
-tph1_50.columns = [c + '-tph1-50' for c in pqm1.columns]
-tph1_58.columns = [c + '-tph1-58' for c in pqm1.columns]
+tph1_50.columns = [c + '-tph1-50' for c in tph1_50.columns]
+tph1_58.columns = [c + '-tph1-58' for c in tph1_58.columns]
 
 # fix tapper columns:
 df.columns = ['Rank', 'Transcript', 'Gene', 'Locus', 'ensembl_gene_id',
@@ -143,7 +143,7 @@ cat_type = pd.CategoricalDtype(categories=['Same', 'Different'], ordered=True)
 res['Sign-WT'] = res.apply(sign_wt, axis=1).astype(cat_type)
 res['Sign-pqm1'] = res.apply(sign_pqm1, axis=1).astype(cat_type)
 res['Sign-tph1-50'] = res.apply(sign_tph1, axis=1).astype(cat_type)
-res['Sign-tph1-58'] = res.apply(sign_tph1, args=(time='58',), axis=1).astype(cat_type)
+res['Sign-tph1-58'] = res.apply(sign_tph1, args=('58',), axis=1).astype(cat_type)
 
 cat_type = pd.CategoricalDtype(categories=['Not DE', 'DE at 50hrs',
                                            'DE at 58hrs', 'DE in both'],
