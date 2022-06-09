@@ -31,6 +31,8 @@ time_getter = function(x){
 genotype_getter = function(x){
   if(str_detect(x[[1]], 'pqm')){
     return('pqm1')
+  } else if (str_detect(x[[1]], 'tph')){
+    return('tph1')
   } else{
     return('wt')
   }
