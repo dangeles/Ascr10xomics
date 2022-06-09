@@ -20,7 +20,7 @@ colData(rds)['Age'] = sapply(rds$names, time_getter) %>% as.factor
 colData(rds)['MultiLevel'] = rds$Treatment + '-' + colData(rds)$Age
 
 # put into DESeq
-dds_tph1 = loadDDS(rds, which='tph1', design=~Treatment)
+dds_tph1 = loadDDS(rds, which='50', column='Age', design=~Treatment)
 res_tph1 = get_results(dds_tph1, 'Treatment', 'ascr', 'cnt', filter=FALSE)
 s_tph1 = lfcShrink(dds_tph1, 'Treatment_ascr_vs_cnt')
 
@@ -30,3 +30,16 @@ res_tph1 %>%
 s_tph1 %>%
     as.data.frame %>%
     write.csv('../data/diff_exp/DE_tph1_50_shrunken.csv', quote = FALSE)
+
+
+# put into DESeq
+dds_tph1 = loadDDS(rds, which='58', column='Age', design=~Treatment)
+res_tph1 = get_results(dds_tph1, 'Treatment', 'ascr', 'cnt', filter=FALSE)
+s_tph1 = lfcShrink(dds_tph1, 'Treatment_ascr_vs_cnt')
+
+res_tph1 %>%
+  as.data.frame %>%
+  write.csv('../data/diff_exp/DE_tph1_58.csv', quote = FALSE)
+s_tph1 %>%
+  as.data.frame %>%
+  write.csv('../data/diff_exp/DE_tph1_58_shrunken.csv', quote = FALSE)
