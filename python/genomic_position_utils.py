@@ -134,11 +134,11 @@ def plot_corrs(corr, shuffled):
         # color in the null interval:
         ax[x, y].fill_between((0, 2 * 10 ** 7), rand5, rand95, color='gray', alpha=0.5)
         ax[x, y].set_title(n, fontsize=35)
-        ax[x, y].annotate('No. Corr Peaks: {0}'.format(n_corr_peaks),
-                          (1 * 10 ** 7, .8), fontsize=30)
-        ax[x, y].tick_params(axis="x", labelsize=30)
-        ax[x, y].tick_params(axis="y", labelsize=30)
-        ax[x, y].yaxis.get_offset_text().set_fontsize(26)
+        ax[x, y].annotate('Peaks: {0}'.format(n_corr_peaks),
+                          (1 * 10 ** 7, .8), fontsize=35)
+        ax[x, y].tick_params(axis="x", labelsize=45)
+        ax[x, y].tick_params(axis="y", labelsize=45)
+        ax[x, y].yaxis.get_offset_text().set_fontsize(45)
 
         for ai in ax:
             for aij in ai:
