@@ -74,6 +74,7 @@ def fdr_correct(data, alpha=0.05, method='indep', col='pval'):
     data.neglogq = data.neglogq.replace(np.inf, np.nanmax(data.neglogq) + 1)
     return data
 
+
 def test_tissue_direction(sig, tissues, col='log2FoldChange-58'):
     """
     A function to test the probability that so many genes are changing in the
@@ -154,7 +155,7 @@ def similarity_trimming(considered_tissues, tissues, remove=[]):
     return remove
 
 
-def pretty_GSEA_plots(binom_data, fc_data, alpha=0.05, x='neglogq',
+def pretty_GSEA_plots(binom_data, alpha=0.05, x='neglogq',
                       y='tissue', hue='data', size=10,
                       palette={'50hrs': 'tab:blue', '58hrs': 'tab:green'}):
     """
