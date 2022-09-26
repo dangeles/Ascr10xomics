@@ -1,7 +1,0 @@
-sample,single_end,fastq_1,fastq_2,strandedness
-pqm-1-50h-cnt_1_T1,1,data/reads/pqm-1-50h-cnt_1_S7_R1_001.fastq.gz,,unstranded
-pqm-1-50h-cnt_2_T1,1,data/reads/pqm-1-50h-cnt_2_S8_R1_001.fastq.gz,,unstranded
-pqm-1-50h-cnt_3_T1,1,data/reads/pqm-1-50h-cnt_3_S9_R1_001.fastq.gz,,unstranded
-pqm1-50h-ascr-1_T1,1,data/reads/pqm-1-50h-ascr_1_S10_R1_001.fastq.gz,,unstranded
-pqm1-50h-ascr-2_T1,1,data/reads/pqm-1-50h-ascr_2_S11_R1_001.fastq.gz,,unstranded
-pqm1-50h-ascr-3_T1,1,data/reads/pqm-1-50h-ascr_3_S12_R1_001.fastq.gz,,unstranded
