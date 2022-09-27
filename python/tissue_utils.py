@@ -155,9 +155,9 @@ def similarity_trimming(considered_tissues, tissues, remove=[]):
     return remove
 
 
-def pretty_GSEA_plots(binom_data, alpha=0.05, x='neglogq',
+def pretty_GSEA_plots(binom_data, sig_level=0.05, x='neglogq',
                       y='tissue', hue='data', size=10,
-                      palette={'50hrs': 'tab:blue', '58hrs': 'tab:green'}):
+                      palette={'50hrs': 'tab:blue', '58hrs': 'tab:green'}, **kwargs):
     """
     GSEA Plots
     """
@@ -165,10 +165,10 @@ def pretty_GSEA_plots(binom_data, alpha=0.05, x='neglogq',
     # generate stripplots of q-values and fraction of positive log2FC
     sns.stripplot(x=x, y=y, data=binom_data, jitter=False,
                   size=size, hue=hue,
-                  palette=palette, ax=ax)
+                  palette=palette, ax=ax, **kwargs)
 
     # significance threshold:
-    ax.axvline(-np.log10(alpha), ls='--', color='red',
+    ax.axvline(-np.log10(sig_level), ls='--', color='red',
                label='alpha threshold')
 
     return fig, ax
