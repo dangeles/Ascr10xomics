@@ -10,7 +10,7 @@ Next, I add a few columns with useful information.
 
 Next, I add the TPM information for 50 and 58hrs.
 
-run this script from `src/prep_master_table.py`
+run this script from `python/prep_master_table.py`
 
 Author: David Angeles-Albores
 email: davidaalbores@gmail.com
@@ -26,7 +26,7 @@ import scipy
 # ensembl data
 ens = pd.read_csv('../data/ensembl.tsv', sep='\t')
 # counts matrix and metadata:
-mat = pd.read_csv('/Users/davidangeles/Documents/matrix.csv')
+mat = pd.read_csv('../data/matrix.csv')
 # DESeq2 results:
 n50 = pd.read_csv('../data/diff_exp/DE_N250.csv', index_col=0)
 n58 = pd.read_csv('../data/diff_exp/DE_N258.csv', index_col=0)
